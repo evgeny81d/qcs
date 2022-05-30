@@ -80,14 +80,14 @@ class Product(models.Model):
         ordering = ['name']
         verbose_name = 'product'
         verbose_name_plural = 'products'
-    
+
     def __str__(self):
         return f'{self.name}'
 
 
 class Supplier(models.Model):
     """Product supplier model."""
-    
+
     name = models.CharField(
         verbose_name='Name',
         max_length=100,
@@ -98,7 +98,7 @@ class Supplier(models.Model):
         max_length=60,
         help_text='Enter supplier country'
     )
-    
+
     city = models.CharField(
         verbose_name='City',
         max_length=60,
@@ -109,7 +109,7 @@ class Supplier(models.Model):
         ordering = ['name']
         verbose_name = 'supplier'
         verbose_name_plural = 'suppliers'
-    
+
     def __str__(self):
         return f'{self.name} {self.country} {self.city}'
 
@@ -131,7 +131,7 @@ class Package(models.Model):
         ('KG', 'kg'),
         ('LTR', 'ltr')
     ]
-    
+
     package_type = models.CharField(
         verbose_name='Package type',
         max_length=8,
@@ -153,7 +153,7 @@ class Package(models.Model):
         ordering = ['size']
         verbose_name = 'package'
         verbose_name_plural = 'packages'
-    
+
     def __str__(self):
         return (f'{self.size} {self.get_uom_display()} '
                 f'{self.get_package_type_display().lower()}')

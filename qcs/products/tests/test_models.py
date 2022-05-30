@@ -11,7 +11,7 @@ class PackageModelTest(TestCase):
             uom='KG',
             size=1000
         )
-    
+
     def test_model_field_names(self):
         """Test model field names."""
         # Prepare test data
@@ -70,15 +70,16 @@ class PackageModelTest(TestCase):
                     value,
                     f'Incorrect <field: {field}.help_text> attribute'
                 )
-    
+
     def test_model_fields_choises(self):
         """Test model fields choices attribute."""
         # Prepare test data
         field_choices_map = {
             'package_type': [('TOTE', 'Tote'), ('DRUM', 'Drum'),
-                ('PALE', 'Pale'), ('CANISTER', 'Canister'), ('CAN', 'Can'),
-                ('BAG', 'Bag')],
-            'uom': [('KG', 'kg'),('LTR', 'ltr')]
+                             ('PALE', 'Pale'), ('CANISTER',
+                                                'Canister'), ('CAN', 'Can'),
+                             ('BAG', 'Bag')],
+            'uom': [('KG', 'kg'), ('LTR', 'ltr')]
         }
         for field, choices in field_choices_map.items():
             with self.subTest(field=field):
@@ -87,7 +88,7 @@ class PackageModelTest(TestCase):
                     choices,
                     f'Incorrect <field: {field}.choices> attribute'
                 )
-    
+
     def test_model_meta_class_attributes(self):
         """Test model class Meta attributes."""
         self.assertEqual(
@@ -116,7 +117,7 @@ class PackageModelTest(TestCase):
             ('Incorrect object name returned by __str__() method '
              f'in model {Package}')
         )
- 
+
 
 class SupplierModelTest(TestCase):
     @classmethod
@@ -127,7 +128,7 @@ class SupplierModelTest(TestCase):
             country='Country',
             city='City'
         )
-    
+
     def test_model_field_names(self):
         """Test model field names."""
         # Prepare test data
@@ -169,7 +170,7 @@ class SupplierModelTest(TestCase):
                     value,
                     f'Incorrect <field: {field}.verbose_name> attribute'
                 )
-    
+
     def test_model_fields_help_text(self):
         """Test model fields help_text attributes."""
         # Prepare test data
@@ -186,7 +187,7 @@ class SupplierModelTest(TestCase):
                     value,
                     f'Incorrect <field: {field}.help_text> attribute'
                 )
-    
+
     def test_model_meta_class_attributes(self):
         """Test model class Meta attributes."""
         self.assertEqual(
@@ -245,7 +246,7 @@ class ProductModelTest(TestCase):
         """Test model field names."""
         # Prepare test data
         field_names = ['id', 'yzr', 'code', 'name', 'formula', 'product_type',
-            'supplier', 'package']
+                       'supplier', 'package']
         foreign_key_related_names = []
         all_field_names = [
             *field_names,
@@ -262,7 +263,7 @@ class ProductModelTest(TestCase):
             all_field_names,
             f'Incorrect model {Product} field names'
         )
-    
+
     def test_model_fields_verbose_name(self):
         """Test model fields verbose_name attributes."""
         # Prepare test data
@@ -283,7 +284,7 @@ class ProductModelTest(TestCase):
                     value,
                     f'Incorrect <field: {field}.verbose_name> attribute'
                 )
-    
+
     def test_model_fields_help_text(self):
         """Test model fields help_text attributes."""
         # Prepare test data
@@ -304,7 +305,7 @@ class ProductModelTest(TestCase):
                     value,
                     f'Incorrect <field: {field}.help_text> attribute'
                 )
-    
+
     def test_model_fields_unique(self):
         """Test model fields unique attributes."""
         # Prepare test data
@@ -316,7 +317,7 @@ class ProductModelTest(TestCase):
                     Product._meta.get_field(field).unique,
                     f'Incorrect <field: {field}.unique> attribute'
                 )
-    
+
     def test_model_fields_null_is_true(self):
         """Test model fields null attribute."""
         # Prepare test data
@@ -327,7 +328,7 @@ class ProductModelTest(TestCase):
                 self.assertTrue(
                     Product._meta.get_field(field).null,
                     f'Incorrect <field: {field}.null> attribute'
-                )   
+                )
 
     def test_model_fields_blank_is_true(self):
         """Test model fields blank attribute."""
@@ -340,18 +341,20 @@ class ProductModelTest(TestCase):
                     Product._meta.get_field(field).blank,
                     f'Incorrect <field: {field}.blank> attribute'
                 )
-    
+
     def test_model_fields_choises(self):
         """Test model fields choices attribute."""
         # Prepare test data
         field_choices_map = {
             'formula': [('SB', 'Solventborne'), ('WB', 'Waterborne'),
-                ('PD', 'Powder coating'), ('AC', 'Acid'), ('AM', 'Amine')],
+                        ('PD', 'Powder coating'), ('AC', 'Acid'), ('AM', 'Amine')],
             'product_type': [('PT', 'Pretreatment'), ('ED', 'Electrocoat'),
-                ('PR', 'Primer'), ('CB', 'Color base'), ('BC', 'Base coat'),
-                ('B1', 'Base 1'), ('B2', 'Base 2'), ('CC', 'Clear coat'),
-                ('MC', 'Monocoat'), ('TH', 'Thinner'),
-                ('CS', 'Cleaning solvent'), ('AD', 'Additive')]
+                             ('PR', 'Primer'), ('CB',
+                                                'Color base'), ('BC', 'Base coat'),
+                             ('B1', 'Base 1'), ('B2',
+                                                'Base 2'), ('CC', 'Clear coat'),
+                             ('MC', 'Monocoat'), ('TH', 'Thinner'),
+                             ('CS', 'Cleaning solvent'), ('AD', 'Additive')]
         }
         for field, choices in field_choices_map.items():
             with self.subTest(field=field):
@@ -360,7 +363,7 @@ class ProductModelTest(TestCase):
                     choices,
                     f'Incorrect <field: {field}.choices> attribute'
                 )
-  
+
     def test_model_meta_class_attributes(self):
         """Test model class Meta attributes."""
         self.assertEqual(
@@ -378,7 +381,7 @@ class ProductModelTest(TestCase):
             'products',
             'Incorrect <class: Meta.verbose_name_plural> attribute'
         )
-    
+
     def test_model_object_name(self):
         """Test model's __str__() method."""
         self.assertEqual(
@@ -387,4 +390,3 @@ class ProductModelTest(TestCase):
             ('Incorrect object name returned by __str__() method '
              f'in model {Product}')
         )
-  
