@@ -187,7 +187,7 @@ class BatchModelTest(TestCase):
         """Test Certificate of analysis valid file extensions."""
         # Prepare test data
         valid_file_extensions = [
-            'pdf', 'jpg', 'jpeg', 'gif', 'png', 'xls', 'xlsx', 'doc', 'docx'
+            'pdf', 'jpg', 'jpeg', 'png', 'xls', 'xlsx', 'doc', 'docx'
         ]
         # Run test
         self.assertEqual(

@@ -19,7 +19,7 @@ def coa_file_path(instance, filename):
 def coa_file_type_validator(file_obj):
     """Certificate of analysis file type validator."""
     with file_obj.open() as f:
-        file_type = magic.from_buffer(f.read(2048), mime=True)
+        file_type = magic.from_buffer(f.read(), mime=True)
         if file_type not in Batch.VALID_FILE_TYPES:
             raise ValidationError(
                 "Invalid file type '%(file_type)s'",
@@ -33,7 +33,7 @@ class Batch(models.Model):
 
     # Valid Certificate Of Analysis file extensions and file types
     VALID_FILE_EXTENSIONS = [
-        'pdf', 'jpg', 'jpeg', 'gif', 'png', 'xls', 'xlsx', 'doc', 'docx'
+        'pdf', 'jpg', 'jpeg', 'png', 'xls', 'xlsx', 'doc', 'docx'
     ]
     VALID_FILE_TYPES = [
         ('application/vnd.openxmlformats-officedocument'
