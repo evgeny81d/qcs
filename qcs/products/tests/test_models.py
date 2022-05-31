@@ -247,11 +247,8 @@ class ProductModelTest(TestCase):
         # Prepare test data
         field_names = ['id', 'yzr', 'code', 'name', 'formula', 'product_type',
                        'supplier', 'package']
-        foreign_key_related_names = []
-        all_field_names = [
-            *field_names,
-            *foreign_key_related_names
-        ]
+        foreign_key_related_names = ['batches', ]
+        all_field_names = [*field_names, *foreign_key_related_names]
         # Run test
         self.assertEqual(
             len(Product._meta.get_fields()),
@@ -347,12 +344,12 @@ class ProductModelTest(TestCase):
         # Prepare test data
         field_choices_map = {
             'formula': [('SB', 'Solventborne'), ('WB', 'Waterborne'),
-                        ('PD', 'Powder coating'), ('AC', 'Acid'), ('AM', 'Amine')],
+                        ('PD', 'Powder coating'), ('AC', 'Acid'),
+                        ('AM', 'Amine')],
             'product_type': [('PT', 'Pretreatment'), ('ED', 'Electrocoat'),
-                             ('PR', 'Primer'), ('CB',
-                                                'Color base'), ('BC', 'Base coat'),
-                             ('B1', 'Base 1'), ('B2',
-                                                'Base 2'), ('CC', 'Clear coat'),
+                             ('PR', 'Primer'), ('CB', 'Color base'),
+                             ('BC', 'Base coat'), ('B1', 'Base 1'),
+                             ('B2', 'Base 2'), ('CC', 'Clear coat'),
                              ('MC', 'Monocoat'), ('TH', 'Thinner'),
                              ('CS', 'Cleaning solvent'), ('AD', 'Additive')]
         }
