@@ -1,3 +1,13 @@
+"""
+Important notes on sample files directories
+
+Sample file directories for coa_file_type_validator() tests:
+'quality/test/invalid_sample_files' - danger sample files (html, scripts etc.)
+'quality/test/valid_sample_files' - safe sample files (pdf, doc, png, etc.)
+
+Keep in these directories files you'd like to use for test runs.
+Be aware! File types are tested (not file extensions).
+"""
 import magic
 from pathlib import Path
 from dataclasses import dataclass
