@@ -1,10 +1,11 @@
 import datetime
 
 from django.test import TestCase
+from django.conf import settings
 from django.core.validators import FileExtensionValidator
 
 from products.models import Product, Supplier, Package
-from ..models import Batch, coa_file_type_validator
+from ..models import Batch, file_type_validator, coa_file_path, color_file_path
 
 
 class BatchModelTest(TestCase):
@@ -22,9 +23,9 @@ class BatchModelTest(TestCase):
             city='City'
         )
         cls.product = Product.objects.create(
-            yzr='YZR123',
+            product_id='YZR123',
             code='234-2',
-            name='Some-base coate 123',
+            name='some base coat 123',
             formula='WB',
             product_type='BC',
             supplier=cls.supplier,
@@ -43,7 +44,7 @@ class BatchModelTest(TestCase):
         # Prepare test data
         field_names = ['id', 'product', 'number', 'size', 'm_date', 'exp_date',
                        'coa']
-        foreign_key_related_names = []
+        foreign_key_related_names = ['color_data']
         all_field_names = [*field_names, *foreign_key_related_names]
         # Run test
         self.assertEqual(
@@ -87,7 +88,7 @@ class BatchModelTest(TestCase):
             'm_date': 'Select manufacturing date',
             'exp_date': 'Select expiry date',
             'coa': (f'Select file to upload '
-                    f'({", ".join(Batch.VALID_FILE_EXTENSIONS)})')
+                    f'({", ".join(settings.VALID_FILE_EXTENSIONS)})')
         }
         # Run test
         for field, value in help_texts.items():
@@ -101,7 +102,7 @@ class BatchModelTest(TestCase):
     def test_model_coa_field_validators(self):
         """Test model <field: coa.validators> attribute."""
         # Prepare test data
-        validators = [FileExtensionValidator, coa_file_type_validator]
+        validators = [FileExtensionValidator, file_type_validator]
         # Run test
         self.assertEqual(
             len(Batch._meta.get_field('coa').validators),
@@ -183,42 +184,25 @@ class BatchModelTest(TestCase):
              f'in model {Batch}')
         )
 
-    def test_valid_file_extensions(self):
-        """Test Certificate of analysis valid file extensions."""
-        # Prepare test data
-        valid_file_extensions = [
-            'pdf', 'jpg', 'jpeg', 'png', 'xls', 'xlsx', 'doc', 'docx'
-        ]
+    def test_coa_file_path_function(self):
+        """Test coa_file_path() function (callable for upload_to argument)."""
+        # Create test data
+        dummy_batch = Batch(
+            product=BatchModelTest.product,
+            number='foo/bar',  # direcory creation threat by using '/'
+            size=3500,
+            m_date=datetime.date(2022, 5, 31),
+            exp_date=datetime.date(2022, 8, 31)
+        )
         # Run test
         self.assertEqual(
-            len(Batch.VALID_FILE_EXTENSIONS),
-            len(valid_file_extensions),
-            f'Incorrect number of valid file extensions in model {Batch}'
+            coa_file_path(BatchModelTest.batch, 'test.jpg'),
+            'coa/some base coat 123 bx123 coa.jpg',
+            'Incorrect filepath for certificate of analysis'
         )
-        self.assertCountEqual(
-            Batch.VALID_FILE_EXTENSIONS,
-            valid_file_extensions,
-            f'Incorrect model {Batch} valid file extensions'
-        )
-
-    def test_valid_file_types(self):
-        """Test Certificate of analysis valid file types."""
-        # Prepare test data
-        valid_file_types = [
-            ('application/vnd.openxmlformats-officedocument'
-             '.wordprocessingml.document'),
-            'application/msword', 'image/jpeg', 'image/png', 'application/pdf',
-            'application/vnd.ms-excel',
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        ]
-        # Run test
         self.assertEqual(
-            len(Batch.VALID_FILE_TYPES),
-            len(valid_file_types),
-            f'Incorrect number of valid file types in model {Batch}'
-        )
-        self.assertCountEqual(
-            Batch.VALID_FILE_TYPES,
-            valid_file_types,
-            f'Incorrect model {Batch} valid file types'
+            coa_file_path(dummy_batch, 'test.jpg'),
+            'coa/some base coat 123 foo bar coa.jpg',
+            ("Incorrect filepath for certificate of analysis "
+             "(directory creation threat with '/' in batch number)")
         )

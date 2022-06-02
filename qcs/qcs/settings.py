@@ -124,6 +124,21 @@ STATICFILES_DIRS = [BASE_DIR / 'static', ]
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 COA_DIR = 'coa/'
+COLOR_DIR = 'color/'
+VALID_FILE_EXTENSIONS = [
+        'pdf', 'jpg', 'jpeg', 'png', 'xls', 'xlsx', 'doc', 'docx'
+]
+VALID_FILE_TYPES = [
+        ('application/vnd.openxmlformats-officedocument'
+         '.wordprocessingml.document'),
+        'application/msword', 'image/jpeg', 'image/png', 'application/pdf',
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+]
+ILLEGAL_FILENAME_CHARACTERS = [
+    '#', '%', '&', '{', '}', '\\', '<', '>', '*', '?', '/', ' ', '$', '!', "'",
+    '"', ':', '@', '+', '`', '|', '='
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

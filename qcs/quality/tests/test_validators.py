@@ -15,7 +15,7 @@ from dataclasses import dataclass
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 
-from ..models import coa_file_type_validator
+from ..models import file_type_validator
 
 
 @dataclass
@@ -41,26 +41,26 @@ class CoaFileTypeValidatorTest(TestCase):
             django_field_file = DjangoFieldFileMimic(file_path)
             with self.subTest(django_field_file=django_field_file):
                 self.assertIsNone(
-                    coa_file_type_validator(django_field_file)
+                    file_type_validator(django_field_file)
                 )
-                self.assertTrue(
+                self.assertFalse(
                     django_field_file.file_obj.closed,
-                    'File object was not closed by coa_file_type_validator()'
+                    'File object was closed by coa_file_type_validator()'
                 )
 
     def test_invalid_file_types(self):
         """Test invalid file types."""
         # Prepare test data
         # Get directory with sample files 'quality/tests/invalid_sample_files'
-        valid_files_path = Path(__file__).parent / 'invalid_sample_files'
+        invalid_files_path = Path(__file__).parent / 'invalid_sample_files'
         error_message = 'Invalid file type {}'
         # Run test
-        for file_path in valid_files_path.iterdir():
+        for file_path in invalid_files_path.iterdir():
             django_field_file = DjangoFieldFileMimic(file_path)
             with self.subTest(django_field_file=django_field_file):
                 self.assertRaises(
                     ValidationError,
-                    coa_file_type_validator,
+                    file_type_validator,
                     django_field_file)
                 self.assertRaisesRegex(
                     ValidationError,
@@ -72,10 +72,10 @@ class CoaFileTypeValidatorTest(TestCase):
                             )
                         )
                     ),
-                    coa_file_type_validator,
+                    file_type_validator,
                     django_field_file
                 )
-                self.assertTrue(
+                self.assertFalse(
                     django_field_file.file_obj.closed,
-                    'File object was not closed by coa_file_type_validator()'
+                    'File object was closed by coa_file_type_validator()'
                 )

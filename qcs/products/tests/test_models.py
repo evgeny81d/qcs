@@ -233,7 +233,7 @@ class ProductModelTest(TestCase):
             city='City'
         )
         cls.product = Product.objects.create(
-            yzr='YZR123',
+            product_id='YZR123',
             code='234-2',
             name='Some-base coate 123',
             formula='WB',
@@ -245,8 +245,8 @@ class ProductModelTest(TestCase):
     def test_model_field_names(self):
         """Test model field names."""
         # Prepare test data
-        field_names = ['id', 'yzr', 'code', 'name', 'formula', 'product_type',
-                       'supplier', 'package']
+        field_names = ['id', 'product_id', 'code', 'name', 'formula',
+                       'product_type', 'supplier', 'package']
         foreign_key_related_names = ['batches', ]
         all_field_names = [*field_names, *foreign_key_related_names]
         # Run test
@@ -265,7 +265,7 @@ class ProductModelTest(TestCase):
         """Test model fields verbose_name attributes."""
         # Prepare test data
         verbose_names = {
-            'yzr': 'YZR code',
+            'product_id': 'Product id',
             'code': 'Product code',
             'name': 'Product name',
             'formula': 'Formula technology',
@@ -286,7 +286,7 @@ class ProductModelTest(TestCase):
         """Test model fields help_text attributes."""
         # Prepare test data
         help_texts = {
-            'yzr': 'Enter yzr code',
+            'product_id': 'Enter product id code',
             'code': 'Enter product code',
             'name': 'Enter product name',
             'formula': 'Select formula technology',
@@ -306,7 +306,7 @@ class ProductModelTest(TestCase):
     def test_model_fields_unique(self):
         """Test model fields unique attributes."""
         # Prepare test data
-        unique_fields = ['id', 'yzr']
+        unique_fields = ['id', 'product_id']
         # Run test
         for field in unique_fields:
             with self.subTest(field=field):
@@ -318,7 +318,7 @@ class ProductModelTest(TestCase):
     def test_model_fields_null_is_true(self):
         """Test model fields null attribute."""
         # Prepare test data
-        null_true_fields = ['package', 'yzr']
+        null_true_fields = ['package', 'product_id']
         # Run test
         for field in null_true_fields:
             with self.subTest(field=field):
@@ -330,7 +330,7 @@ class ProductModelTest(TestCase):
     def test_model_fields_blank_is_true(self):
         """Test model fields blank attribute."""
         # Prepare test data
-        blank_true_fields = ['package', 'yzr']
+        blank_true_fields = ['package', 'product_id']
         # Run test
         for field in blank_true_fields:
             with self.subTest(field=field):
