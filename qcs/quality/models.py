@@ -24,9 +24,9 @@ def color_file_path(instance, filename):
     """Create color sheet filepath for upload."""
     # Prevent creation of directory when '/' appear in product name
     # or batch number
-    batch = str(instance.batch).replace('/', '_')
+    batch = str(instance.batch).replace('/', ' ')
     # Add logger or handler if settings.COA_DIR directory does not exist
-    return f'{settings.COLOR_DIR}{batch}_color{PurePath(filename).suffix}'
+    return f'{settings.COLOR_DIR}{batch} color{PurePath(filename).suffix}'
 
 
 def file_type_validator(file_obj):
@@ -95,10 +95,16 @@ class Batch(models.Model):
 class ColorData(models.Model):
     """Color data model."""
 
+    # Choices constants
+    CS = 'CS'
+    QC = 'QC'
+
+    # Category choices
     CATEGORY_CHOICES = [
         ('CS', 'Color sheet'),
         ('QC', 'Quality check')
     ]
+
     timestamp = models.DateTimeField(
         verbose_name='Timestamp',
         help_text='Record creation timestamp',

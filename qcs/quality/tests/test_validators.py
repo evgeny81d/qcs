@@ -59,9 +59,8 @@ class CoaFileTypeValidatorTest(TestCase):
             django_field_file = DjangoFieldFileMimic(file_path)
             with self.subTest(django_field_file=django_field_file):
                 self.assertRaises(
-                    ValidationError,
-                    file_type_validator,
-                    django_field_file)
+                    ValidationError, file_type_validator, django_field_file
+                )
                 self.assertRaisesRegex(
                     ValidationError,
                     error_message.format(
