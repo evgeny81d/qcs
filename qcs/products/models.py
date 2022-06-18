@@ -33,19 +33,29 @@ class Supplier(models.Model):
 class Package(models.Model):
     """Package type model."""
 
+    # Choices constants
+    TOTE = 'TOTE'
+    DRUM = 'DRUM'
+    PALE = 'PALE'
+    CANISTER = 'CANISTER'
+    CAN = 'CAN'
+    BAG = 'BAG'
+    KG = 'KG'
+    LTR = 'LTR'
+
     # Package type choices
     PKG_TYPE_CHOICES = [
-        ('TOTE', 'Tote'),
-        ('DRUM', 'Drum'),
-        ('PALE', 'Pale'),
-        ('CANISTER', 'Canister'),
-        ('CAN', 'Can'),
-        ('BAG', 'Bag')
+        (TOTE, 'Tote'),
+        (DRUM, 'Drum'),
+        (PALE, 'Pale'),
+        (CANISTER, 'Canister'),
+        (CAN, 'Can'),
+        (BAG, 'Bag')
     ]
     # UOM (Unit Of Measure) choices
     UOM_CHOICES = [
-        ('KG', 'kg'),
-        ('LTR', 'ltr')
+        (KG, 'kg'),
+        (LTR, 'ltr')
     ]
 
     package_type = models.CharField(
@@ -78,28 +88,47 @@ class Package(models.Model):
 class Product(models.Model):
     """Product model."""
 
+    # Choices constants
+    SB = 'SB'
+    WB = 'WB'
+    PD = 'PD'
+    AC = 'AC'
+    AM = 'AM'
+    PT = 'PT'
+    ED = 'ED'
+    PR = 'PR'
+    CB = 'CB'
+    BC = 'BC'
+    B1 = 'B1'
+    B2 = 'B2'
+    CC = 'CC'
+    MC = 'MC'
+    TH = 'TH'
+    CS = 'CS'
+    AD = 'AD'
+
     # Formula technology choices
     FORMULA_CHOICES = [
-        ('SB', 'Solventborne'),
-        ('WB', 'Waterborne'),
-        ('PD', 'Powder coating'),
-        ('AC', 'Acid'),
-        ('AM', 'Amine')
+        (SB, 'Solventborne'),
+        (WB, 'Waterborne'),
+        (PD, 'Powder coating'),
+        (AC, 'Acid'),
+        (AM, 'Amine')
     ]
     # Layering system choices
     TYPE_CHOICES = [
-        ('PT', 'Pretreatment'),
-        ('ED', 'Electrocoat'),
-        ('PR', 'Primer'),
-        ('CB', 'Color base'),
-        ('BC', 'Base coat'),
-        ('B1', 'Base 1'),
-        ('B2', 'Base 2'),
-        ('CC', 'Clear coat'),
-        ('MC', 'Monocoat'),
-        ('TH', 'Thinner'),
-        ('CS', 'Cleaning solvent'),
-        ('AD', 'Additive')
+        (PT, 'Pretreatment'),
+        (ED, 'Electrocoat'),
+        (PR, 'Primer'),
+        (CB, 'Color base'),
+        (BC, 'Base coat'),
+        (B1, 'Base 1'),
+        (B2, 'Base 2'),
+        (CC, 'Clear coat'),
+        (MC, 'Monocoat'),
+        (TH, 'Thinner'),
+        (CS, 'Cleaning solvent'),
+        (AD, 'Additive')
     ]
 
     # Model fields
