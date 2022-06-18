@@ -12,15 +12,29 @@ class PackageModelTest(TestCase):
             size=1000
         )
 
+    def test_model_constants(self):
+        """Test model constants values."""
+        # Prepare test data
+        choice_constants = {Package.TOTE: 'TOTE', Package.DRUM: 'DRUM',
+                            Package.PALE: 'PALE', Package.CANISTER: 'CANISTER',
+                            Package.CAN: 'CAN', Package.BAG: 'BAG',
+                            Package.KG: 'KG', Package.LTR: 'LTR'}
+        # Run test
+        for key, val in choice_constants.items():
+            with self.subTest(key=key):
+                self.assertEqual(key, val)
+        self.assertEqual(
+            len(choice_constants),
+            len([*Package.PKG_TYPE_CHOICES, *Package.UOM_CHOICES]),
+            (f'Model {Package} choice constants not equal to number '
+             'of choice options')
+        )
+
     def test_model_field_names(self):
         """Test model field names."""
         # Prepare test data
-        field_names = [
-            'id', 'package_type', 'uom', 'size'
-        ]
-        foreign_key_related_names = [
-            'products'
-        ]
+        field_names = ['id', 'package_type', 'uom', 'size']
+        foreign_key_related_names = ['products']
         all_field_names = [
             *field_names,
             *foreign_key_related_names
@@ -76,9 +90,8 @@ class PackageModelTest(TestCase):
         # Prepare test data
         field_choices_map = {
             'package_type': [('TOTE', 'Tote'), ('DRUM', 'Drum'),
-                             ('PALE', 'Pale'), ('CANISTER',
-                                                'Canister'), ('CAN', 'Can'),
-                             ('BAG', 'Bag')],
+                             ('PALE', 'Pale'), ('CANISTER', 'Canister'),
+                             ('CAN', 'Can'), ('BAG', 'Bag')],
             'uom': [('KG', 'kg'), ('LTR', 'ltr')]
         }
         for field, choices in field_choices_map.items():
@@ -240,6 +253,28 @@ class ProductModelTest(TestCase):
             product_type='BC',
             supplier=cls.supplier,
             package=cls.package
+        )
+
+    def test_model_constants(self):
+        """Test model constants values."""
+        # Prepare test data
+        choice_constants = {
+            Product.SB: 'SB', Product.WB: 'WB', Product.PD: 'PD',
+            Product.AC: 'AC', Product.AM: 'AM', Product.PT: 'PT',
+            Product.ED: 'ED', Product.PR: 'PR', Product.CB: 'CB',
+            Product.BC: 'BC', Product.B1: 'B1', Product.B2: 'B2',
+            Product.CC: 'CC', Product.MC: 'MC', Product.TH: 'TH',
+            Product.CS: 'CS', Product.AD: 'AD'
+        }
+        # Run test
+        for key, value in choice_constants.items():
+            with self.subTest(key=key):
+                self.assertEqual(key, value)
+        self.assertEqual(
+            len(choice_constants),
+            len([*Product.FORMULA_CHOICES, *Product.TYPE_CHOICES]),
+            (f'Model {Product} choice constants not equal to number '
+             'of choice options')
         )
 
     def test_model_field_names(self):
