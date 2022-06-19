@@ -24,9 +24,11 @@ def color_file_path(instance, filename):
     """Create color sheet filepath for upload."""
     # Prevent creation of directory when '/' appear in product name
     # or batch number
-    batch = str(instance.batch).replace('/', ' ')
+    product = str(instance.product).replace('/', ' ')
+    number = str(instance.number).replace('/', ' ')
     # Add logger or handler if settings.COA_DIR directory does not exist
-    return f'{settings.COLOR_DIR}{batch} color{PurePath(filename).suffix}'
+    return (f'{settings.COLOR_DIR}{product} {number} '
+            f'color{PurePath(filename).suffix}')
 
 
 def file_type_validator(file_obj):
@@ -83,6 +85,22 @@ class Batch(models.Model):
         ]
     )
 
+    color_sheet = models.FileField(
+        upload_to=color_file_path,
+        verbose_name='Color sheet',
+        help_text=(f'Select file to upload '
+                   f'({", ".join(settings.VALID_FILE_EXTENSIONS)})'),
+        blank=True,
+        null=True,
+        validators=[
+            FileExtensionValidator(
+                settings.VALID_FILE_EXTENSIONS,
+                'Invalid file extension'
+            ),
+            file_type_validator
+        ]
+    )
+
     class Meta:
         ordering = ['product', 'number']
         verbose_name = 'batch'
@@ -101,8 +119,8 @@ class ColorData(models.Model):
 
     # Category choices
     CATEGORY_CHOICES = [
-        ('CS', 'Color sheet'),
-        ('QC', 'Quality check')
+        ('CS', 'Batch color sheet'),
+        ('QC', 'Batch panel quality inspection')
     ]
 
     timestamp = models.DateTimeField(
@@ -199,21 +217,6 @@ class ColorData(models.Model):
         verbose_name='Comment',
         help_text='Enter comment',
         blank=True
-    )
-    color_sheet = models.FileField(
-        upload_to=color_file_path,
-        verbose_name='Color sheet',
-        help_text=(f'Select file to upload '
-                   f'({", ".join(settings.VALID_FILE_EXTENSIONS)})'),
-        blank=True,
-        null=True,
-        validators=[
-            FileExtensionValidator(
-                settings.VALID_FILE_EXTENSIONS,
-                'Invalid file extension'
-            ),
-            file_type_validator
-        ]
     )
 
     class Meta:

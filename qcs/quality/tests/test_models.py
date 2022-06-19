@@ -45,7 +45,7 @@ class BatchModelTest(TestCase):
         """Test model field names."""
         # Prepare test data
         field_names = ['id', 'product', 'number', 'size', 'm_date', 'exp_date',
-                       'coa']
+                       'coa', 'color_sheet']
         foreign_key_related_names = ['color_data']
         all_field_names = [*field_names, *foreign_key_related_names]
         # Run test
@@ -69,7 +69,8 @@ class BatchModelTest(TestCase):
             'size': 'Batch size',
             'm_date': 'Manufacturing date',
             'exp_date': 'Expiry date',
-            'coa': 'Certificate of analysis'
+            'coa': 'Certificate of analysis',
+            'color_sheet': 'Color sheet'
         }
         # Run test
         for field, value in verbose_names.items():
@@ -90,7 +91,9 @@ class BatchModelTest(TestCase):
             'm_date': 'Select manufacturing date',
             'exp_date': 'Select expiry date',
             'coa': (f'Select file to upload '
-                    f'({", ".join(settings.VALID_FILE_EXTENSIONS)})')
+                    f'({", ".join(settings.VALID_FILE_EXTENSIONS)})'),
+            'color_sheet': (f'Select file to upload '
+                            f'({", ".join(settings.VALID_FILE_EXTENSIONS)})')
         }
         # Run test
         for field, value in help_texts.items():
@@ -123,6 +126,29 @@ class BatchModelTest(TestCase):
             f'Incorrect validator function in {coa_field}'
         )
 
+    def test_model_color_sheet_field_validators(self):
+        """Test model <field: color_sheet.validators> attribute."""
+        # Prepare test data
+        validators = [FileExtensionValidator, file_type_validator]
+        color_sheet_field = Batch._meta.get_field('color_sheet')
+        # Run test
+        self.assertEqual(
+            len(color_sheet_field.validators),
+            len(validators),
+            (f'Incorrect number of validators in model {color_sheet_field} '
+             'field')
+        )
+        self.assertIsInstance(
+            color_sheet_field.validators[0],
+            validators[0],
+            f'Incorrect validator type in {color_sheet_field} field'
+        )
+        self.assertEqual(
+            color_sheet_field.validators[1].__name__,
+            validators[1].__name__,
+            f'Incorrect validator type in {color_sheet_field} field'
+        )
+
     def test_model_fields_unique(self):
         """Test model fields unique attributes."""
         # Prepare test data
@@ -138,7 +164,7 @@ class BatchModelTest(TestCase):
     def test_model_fields_null_is_true(self):
         """Test model fields null attribute."""
         # Prepare test data
-        null_true_fields = ['coa', ]
+        null_true_fields = ['coa', 'color_sheet']
         # Run test
         for field in null_true_fields:
             with self.subTest(field=field):
@@ -150,7 +176,7 @@ class BatchModelTest(TestCase):
     def test_model_fields_blank_is_true(self):
         """Test model fields blank attribute."""
         # Prepare test data
-        blank_true_fields = ['coa', ]
+        blank_true_fields = ['coa', 'color_sheet']
         # Run test
         for field in blank_true_fields:
             with self.subTest(field=field):
@@ -187,7 +213,7 @@ class BatchModelTest(TestCase):
         )
 
     def test_coa_file_path_function(self):
-        """Test coa_file_path() function (callable for upload_to argument)."""
+        """Test coa_file_path() callable for 'upload_to' argument."""
         # Create test data
         dummy_batch = Batch(
             product=BatchModelTest.product,
@@ -205,6 +231,29 @@ class BatchModelTest(TestCase):
         self.assertEqual(
             coa_file_path(dummy_batch, 'test.jpg'),
             'coa/some base coat 123 foo bar coa.jpg',
+            ("Incorrect filepath for certificate of analysis "
+             "(directory creation threat with '/' in batch number)")
+        )
+
+    def test_color_file_path_function(self):
+        """Test color_file_path() - callable for 'upload_to' argument."""
+        # Create test data
+        dummy_batch = Batch(
+            product=BatchModelTest.product,
+            number='foo/bar',  # cover direcory creation threat by using '/'
+            size=3500,
+            m_date=datetime.date(2022, 5, 31),
+            exp_date=datetime.date(2022, 8, 31)
+        )
+        # Run test
+        self.assertEqual(
+            color_file_path(BatchModelTest.batch, 'test.jpg'),
+            'color/some base coat 123 bx123 color.jpg',
+            'Incorrect filepath for certificate of analysis'
+        )
+        self.assertEqual(
+            color_file_path(dummy_batch, 'test.jpg'),
+            'color/some base coat 123 foo bar color.jpg',
             ("Incorrect filepath for certificate of analysis "
              "(directory creation threat with '/' in batch number)")
         )
@@ -278,7 +327,7 @@ class ColorDataModelTest(TestCase):
         # Prepare test data
         field_names = ['id', 'timestamp', 'batch', 'category', 'l_25', 'l_45',
                        'l_75', 'a_25', 'a_45', 'a_75', 'b_25', 'b_45', 'b_75',
-                       'de_25', 'de_45', 'de_75', 'comment', 'color_sheet']
+                       'de_25', 'de_45', 'de_75', 'comment']
         foreign_key_related_names = []
         all_field_names = [*field_names, *foreign_key_related_names]
         # Run test
@@ -312,8 +361,7 @@ class ColorDataModelTest(TestCase):
             'de_25': 'dE25',
             'de_45': 'dE45',
             'de_75': 'dE75',
-            'comment': 'Comment',
-            'color_sheet': 'Color sheet'
+            'comment': 'Comment'
         }
         # Run test
         for field, value in verbose_names.items():
@@ -343,9 +391,7 @@ class ColorDataModelTest(TestCase):
             'de_25': 'Enter dE25 value',
             'de_45': 'Enter dE45 value',
             'de_75': 'Enter dE75 value',
-            'comment': 'Enter comment',
-            'color_sheet': (f'Select file to upload '
-                            f'({", ".join(settings.VALID_FILE_EXTENSIONS)})')
+            'comment': 'Enter comment'
         }
         # Run test
         for field, value in help_texts.items():
@@ -355,29 +401,6 @@ class ColorDataModelTest(TestCase):
                     value,
                     f'Incorrect <field: {field}.help_text> attribute'
                 )
-
-    def test_model_color_sheet_field_validators(self):
-        """Test model <field: color_sheet.validators> attribute."""
-        # Prepare test data
-        validators = [FileExtensionValidator, file_type_validator]
-        color_sheet_field = ColorData._meta.get_field('color_sheet')
-        # Run test
-        self.assertEqual(
-            len(color_sheet_field.validators),
-            len(validators),
-            (f'Incorrect number of validators in model {color_sheet_field} '
-             'field')
-        )
-        self.assertIsInstance(
-            color_sheet_field.validators[0],
-            validators[0],
-            f'Incorrect validator type in {color_sheet_field} field'
-        )
-        self.assertEqual(
-            color_sheet_field.validators[1].__name__,
-            validators[1].__name__,
-            f'Incorrect validator type in {color_sheet_field} field'
-        )
 
     def test_model_fields_unique(self):
         """Test model fields unique attributes."""
@@ -394,7 +417,7 @@ class ColorDataModelTest(TestCase):
     def test_model_fields_null_is_true(self):
         """Test model fields null attribute."""
         # Prepare test data
-        null_true_fields = ['color_sheet', ]
+        null_true_fields = []
         # Run test
         for field in null_true_fields:
             with self.subTest(field=field):
@@ -406,7 +429,7 @@ class ColorDataModelTest(TestCase):
     def test_model_fields_blank_is_true(self):
         """Test model fields blank attribute."""
         # Prepare test data
-        blank_true_fields = ['comment', 'color_sheet']
+        blank_true_fields = ['comment', ]
         # Run test
         for field in blank_true_fields:
             with self.subTest(field=field):
@@ -484,30 +507,4 @@ class ColorDataModelTest(TestCase):
              f'{color_data_obj.get_category_display()}'.lower()),
             ('Incorrect object name returned by __str__() method '
              f'in model {ColorData}')
-        )
-
-    def test_color_file_path_function(self):
-        """Test coa_file_path() function (callable for upload_to argument)."""
-        # Create test data
-        dummy_batch = Batch(
-            product=BatchModelTest.product,
-            number='foo/bar',  # cover direcory creation threat by using '/'
-            size=3500,
-            m_date=datetime.date(2022, 5, 31),
-            exp_date=datetime.date(2022, 8, 31)
-        )
-        dummy_color = ColorData(
-            batch=dummy_batch,
-        )
-        # Run test
-        self.assertEqual(
-            color_file_path(ColorDataModelTest.color_data, 'test.jpg'),
-            'color/some base coat 123 bx123 color.jpg',
-            'Incorrect filepath for certificate of analysis'
-        )
-        self.assertEqual(
-            color_file_path(dummy_color, 'test.jpg'),
-            'color/some base coat 123 foo bar color.jpg',
-            ("Incorrect filepath for certificate of analysis "
-             "(directory creation threat with '/' in batch number)")
         )
